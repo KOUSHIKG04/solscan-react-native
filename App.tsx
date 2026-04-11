@@ -9,6 +9,7 @@ import { ActivityIndicator, View } from "react-native";
 import WalletScreen from "./src/screens/wallet";
 import SwapScreen from "./src/screens/swap";
 import { useAppStyles } from "./src/theme/useAppStyles";
+import { Ionicons } from "@expo/vector-icons";
 import { 
   useFonts, 
   Poppins_300Light, 
@@ -74,7 +75,6 @@ export default function App() {
             backgroundColor: theme.surfaceFill,
             borderTopWidth: 0.25,
             borderTopColor: theme.stroke,
-            // paddingTop: 8,
             height: 70,
           },
           tabBarLabelStyle: {
@@ -89,12 +89,22 @@ export default function App() {
         <Tab.Screen
           name="Wallet"
           component={WalletScreen}
-          options={{ tabBarLabel: "Scanner" }}
+          options={{ 
+            tabBarLabel: "Scanner",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="scan" size={size} color={color} />
+            ),
+          }}
         />
         <Tab.Screen
           name="Swap"
           component={SwapScreen}
-          options={{ tabBarLabel: "Swap" }}
+          options={{ 
+            tabBarLabel: "Swap",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="swap-horizontal" size={size} color={color} />
+            ),
+          }}
         />
       </Tab.Navigator>
     </NavigationContainer>

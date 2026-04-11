@@ -12,6 +12,7 @@ import {
 import { useAppStyles } from "../theme/useAppStyles";
 import { Token, Txn, getBalance, getTokens, getTxns } from "../utils/solanaApi";
 import { shortenAddress, timeAgo } from "../utils/formatters";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function WalletScreen() {
   const [address, setAddress] = useState("");
@@ -68,9 +69,11 @@ export default function WalletScreen() {
                 style={styles.themeToggle}
                 onPress={toggleScheme}
               >
-                <Text style={styles.themeToggleText}>
-                  {scheme === "light" ? "🌙" : "☀️"}
-                </Text>
+                <Ionicons
+                  name={scheme === "light" ? "moon" : "sunny"}
+                  size={16}
+                  color={theme.text}
+                />
               </TouchableOpacity>
             </View>
             <Text style={styles.subtitle}>
@@ -206,14 +209,17 @@ export default function WalletScreen() {
                   <Text style={styles.txSig}>{shortenAddress(tx.sig, 8)}</Text>
                   <Text style={styles.txTime}>{timeAgo(tx.time)}</Text>
                 </View>
-                <Text
-                  style={{
-                    color: tx.ok ? theme.semanticGreen : theme.semanticRed,
-                    fontWeight: "bold",
-                  }}
-                >
-                  {tx.ok ? "Success" : "Failed"}
-                </Text>
+                <View style={{ alignItems: "flex-end" }}>
+                  <Text
+                    style={{
+                      color: tx.ok ? theme.semanticGreen : theme.semanticRed,
+                      fontFamily: "Poppins-Bold",
+                    }}
+                  >
+                    {tx.ok ? "Success" : "Failed"}
+                  </Text>
+                  <Ionicons name="chevron-forward" size={18} color={theme.stroke} style={{ marginTop: 2 }} />
+                </View>
               </TouchableOpacity>
             </View>
           );

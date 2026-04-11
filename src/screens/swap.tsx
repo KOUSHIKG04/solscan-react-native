@@ -1,6 +1,7 @@
 import React from "react";
 import { SafeAreaView, View, Text, TouchableOpacity } from "react-native";
 import { useAppStyles } from "../theme/useAppStyles";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function SwapScreen() {
   const { styles, theme, scheme, toggleScheme } = useAppStyles();
@@ -11,9 +12,11 @@ export default function SwapScreen() {
         <View style={styles.headerRow}>
           <Text style={styles.title}>SolSwap</Text>
           <TouchableOpacity style={styles.themeToggle} onPress={toggleScheme}>
-            <Text style={styles.themeToggleText}>
-              {scheme === "light" ? "🌙" : "☀️"}
-            </Text>
+            <Ionicons
+              name={scheme === "light" ? "moon" : "sunny"}
+              size={16}
+              color={theme.text}
+            />
           </TouchableOpacity>
         </View>
         <Text style={styles.subtitle}>Swap your tokens instantly</Text>
