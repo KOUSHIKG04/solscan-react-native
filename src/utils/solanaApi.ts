@@ -42,7 +42,7 @@ export const getTokens = async (addr: string): Promise<Token[]> => {
 };
 
 export const getTxns = async (addr: string): Promise<Txn[]> => {
-  const sigs = await rpc("getSignaturesForAddress", [addr, { limit: 10 }]);
+  const sigs = await rpc("getSignaturesForAddress", [addr, { limit: 50 }]);
   return sigs.map((s: any) => ({
     sig: s.signature,
     time: s.blockTime,

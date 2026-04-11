@@ -49,7 +49,7 @@ export const useAppStyles = () => {
     const generatedStyles = StyleSheet.create({
       safe: { flex: 1, backgroundColor: theme.primaryFill },
       scroll: { flex: 1 },
-      scrollContent: { padding: 20, paddingTop: 65,},
+      scrollContent: { padding: 20, paddingTop: 65, },
       headerRow: {
         flexDirection: "row",
         alignItems: "center",
@@ -57,7 +57,7 @@ export const useAppStyles = () => {
         position: "relative",
         justifyContent: "flex-start",
         textAlign: "left",
-        padding:0
+        padding: 0
       },
       themeToggle: {
         position: "absolute",
@@ -83,7 +83,7 @@ export const useAppStyles = () => {
         textAlign: "left",
         fontFamily: "Poppins-Regular",
       },
-      inputContainer: { flexDirection: "row", marginBottom: 24, gap: 12, borderRadius: 8 },
+      inputContainer: { flexDirection: "row", marginBottom: 12, borderRadius: 8 },
       input: {
         flex: 3,
         backgroundColor: theme.surfaceFill,
@@ -94,14 +94,16 @@ export const useAppStyles = () => {
         borderWidth: 0.25,
         borderRadius: 8,
         fontFamily: "Poppins-Regular",
+
       },
       btn: {
         flex: 1,
         backgroundColor: theme.primaryOrange,
-        padding: 14,
+        padding: 12,
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: 8,
+        borderRadius: 12,
+        marginBottom: 24
       },
       btnText: {
         color: theme.whiteConstant,
