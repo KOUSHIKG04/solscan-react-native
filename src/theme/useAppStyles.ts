@@ -51,7 +51,7 @@ export const useAppStyles = () => {
       scroll: { flex: 1 },
       scrollContent: {
         paddingHorizontal: 20,
-        paddingBottom: 40,
+        // paddingBottom: 10,
       },
       headerRow: {
         flexDirection: "row",
