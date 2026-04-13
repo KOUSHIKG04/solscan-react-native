@@ -1,6 +1,6 @@
 export const shortenAddress = (addr: string, chars = 4) => {
   if (!addr) return "";
-  return `${addr.slice(0, chars)}...${addr.slice(-chars)}`;
+  return `${addr.slice(0, chars)}......${addr.slice(-chars)}`;
 };
 
 export const timeAgo = (timestamp: number) => {

@@ -10,13 +10,13 @@ import WalletScreen from "./src/screens/wallet";
 import SwapScreen from "./src/screens/swap";
 import { useAppStyles } from "./src/theme/useAppStyles";
 import { Ionicons } from "@expo/vector-icons";
-import { 
-  useFonts, 
-  Poppins_300Light, 
-  Poppins_400Regular, 
-  Poppins_500Medium, 
-  Poppins_600SemiBold, 
-  Poppins_700Bold 
+import {
+  useFonts,
+  Poppins_300Light,
+  Poppins_400Regular,
+  Poppins_500Medium,
+  Poppins_600SemiBold,
+  Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
 
 const Tab = createBottomTabNavigator();
@@ -31,11 +31,11 @@ export default function App() {
   });
 
   // Wrap at the highest level to establish system tracking natively over the entire react tree
-  const { theme, scheme } = useAppStyles();
+  const { theme, scheme, styles } = useAppStyles();
 
   if (!fontsLoaded) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.primaryFill }}>
+      <View style={styles.fullLoadingView}>
         <ActivityIndicator size="large" color={theme.primaryOrange} />
       </View>
     );
@@ -71,38 +71,29 @@ export default function App() {
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
-          tabBarStyle: {
-            backgroundColor: theme.surfaceFill,
-            borderTopWidth: 0.25,
-            borderTopColor: theme.stroke,
-            height: 70,
-          },
-          tabBarLabelStyle: {
-            fontSize: 14,
-            paddingBottom: 8,
-            fontFamily: "Poppins-Bold",
-          },
+          tabBarStyle: styles.tabBar,
+          tabBarLabelStyle: styles.tabBarLabel,
           tabBarActiveTintColor: theme.primaryOrange,
           tabBarInactiveTintColor: theme.stroke,
         }}
       >
         <Tab.Screen
-          name="Wallet"
-          component={WalletScreen}
-          options={{ 
-            tabBarLabel: "Scanner",
+          name="Swap"
+          component={SwapScreen}
+          options={{
+            tabBarLabel: "Swap",
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="scan" size={size} color={color} />
+              <Ionicons name="swap-horizontal" size={size} color={color} />
             ),
           }}
         />
         <Tab.Screen
-          name="Swap"
-          component={SwapScreen}
-          options={{ 
-            tabBarLabel: "Swap",
+          name="Wallet"
+          component={WalletScreen}
+          options={{
+            tabBarLabel: "Scanner",
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="swap-horizontal" size={size} color={color} />
+              <Ionicons name="scan" size={size} color={color} />
             ),
           }}
         />
