@@ -42,13 +42,13 @@ export default function WalletScreen() {
     setTokensLimit(5);
 
     try {
-      const bal = await getBalance(address);
+      const [bal, toks, history] = await Promise.all([
+        getBalance(address),
+        getTokens(address).catch(() => []),
+        getTxns(address).catch(() => []),
+      ]);
       setBalance(bal);
-
-      const toks = await getTokens(address).catch(() => []);
       setTokens(toks);
-
-      const history = await getTxns(address).catch(() => []);
       setTxns(history);
     } catch (err: any) {
       setError(err.message || "Invalid or unreachable address.");
@@ -106,7 +106,7 @@ export default function WalletScreen() {
           </View>
 
           {error && !loading && (
-            <View style={[styles.card, styles.errorCard]}>
+            <View style={[styles.card, { borderColor: theme.semanticRed }]}>
               <Text style={styles.errorText}>{error}</Text>
             </View>
           )}

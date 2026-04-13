@@ -84,7 +84,6 @@ export default function SwapScreen() {
           <View style={styles.swapArrowContainer}>
             <TouchableOpacity style={styles.swapArrow} onPress={swapTokens}>
               <Ionicons name="arrow-down" size={20} color={theme.text} />
-              {/* <Ionicons name="arrow-up" size={20} color={theme.text} /> */}
             </TouchableOpacity>
           </View>
 

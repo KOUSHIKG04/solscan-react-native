@@ -71,7 +71,6 @@ export const useAppStyles = () => {
         borderColor: theme.stroke,
         borderRadius: 8,
       },
-      themeToggleText: { fontSize: 14, fontFamily: "Poppins-Regular" },
       title: {
         fontSize: 32,
         color: theme.text,
@@ -145,16 +144,8 @@ export const useAppStyles = () => {
       },
       tokenMint: { color: theme.text, flex: 1, marginRight: 10, fontFamily: "Poppins-Regular" },
       tokenAmount: { color: theme.primaryOrange, fontFamily: "Poppins-Bold" },
-      txInfo: { flex: 1 },
       txSig: { color: theme.text, marginBottom: 4, fontFamily: "Poppins-Regular" },
       txTime: { color: theme.stroke, fontSize: 12, fontFamily: "Poppins-Light" },
-      moreText: {
-        color: theme.stroke,
-        textAlign: "center",
-        marginTop: 8,
-        fontSize: 14,
-        fontFamily: "Poppins-Medium",
-      },
       // Swap Specific Styles
       swapScroll: {
         flex: 1,
@@ -266,7 +257,6 @@ export const useAppStyles = () => {
       colFlex1_5: { flex: 1.5 },
       colCenter: { flex: 1, alignItems: "center" },
       colRight: { flex: 0.5, alignItems: "flex-end", justifyContent: "center" },
-      // errorCard: {  },
       errorText: { color: theme.semanticRed, textAlign: "center", fontFamily: "Poppins-Bold" },
       loaderSmall: { alignSelf: "flex-start", marginVertical: 4 },
       colHeading: {
@@ -292,40 +282,6 @@ export const useAppStyles = () => {
       },
       iconButton: { padding: 4 },
       iconAdjust: { marginTop: 2 },
-      txItemCardBase: {
-        paddingTop: 0,
-        borderTopWidth: 0,
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0,
-      },
-      txItemCardBottom: {
-        paddingBottom: 20,
-        marginBottom: 16,
-        borderBottomWidth: 1,
-        borderBottomLeftRadius: 8,
-        borderBottomRightRadius: 8,
-      },
-      txItemCardNoBottom: {
-        paddingBottom: 0,
-        marginBottom: 0,
-        borderBottomWidth: 0,
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
-      },
-      cardFooterToggle: {
-        paddingTop: 10,
-        paddingBottom: 20,
-        marginBottom: 16,
-        borderTopWidth: 0,
-        borderBottomWidth: 1,
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0,
-        borderBottomLeftRadius: 8,
-        borderBottomRightRadius: 8,
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        alignItems: "center",
-      },
       toggleBtn: { padding: 10, alignItems: "center" },
       tokenFooterToggleRow: {
         flexDirection: "row",
@@ -333,13 +289,6 @@ export const useAppStyles = () => {
         paddingTop: 10,
       },
       bottomSpacer: { height: 20 },
-      loadingCardActive: {
-        paddingBottom: 20,
-        marginBottom: 16,
-        borderBottomWidth: 0.25,
-        borderBottomLeftRadius: 8,
-        borderBottomRightRadius: 8,
-      },
       // App Routing Layer Styles
       fullLoadingView: {
         flex: 1,

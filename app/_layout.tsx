@@ -1,5 +1,5 @@
-import { Stack } from 'expo-router';
-import { ActivityIndicator, View } from 'react-native';
+import { Stack } from "expo-router";
+import { ActivityIndicator, View } from "react-native";
 import {
   useFonts,
   Poppins_300Light,
@@ -7,9 +7,13 @@ import {
   Poppins_500Medium,
   Poppins_600SemiBold,
   Poppins_700Bold,
-} from '@expo-google-fonts/poppins';
-import { ThemeProvider, DefaultTheme, DarkTheme } from '@react-navigation/native';
-import { useAppStyles } from '../src/theme/useAppStyles';
+} from "@expo-google-fonts/poppins";
+import {
+  ThemeProvider,
+  DefaultTheme,
+  DarkTheme,
+} from "@react-navigation/native";
+import { useAppStyles } from "../src/theme/useAppStyles";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -40,13 +44,14 @@ export default function RootLayout() {
       text: theme.text,
       border: theme.stroke,
       primary: theme.primaryOrange,
-    }
+    },
   };
 
   return (
     <ThemeProvider value={activeTheme}>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="token/[mint]" options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );
