@@ -1,3 +1,4 @@
+import "../global.css";
 import { Stack } from "expo-router";
 import { ActivityIndicator, View } from "react-native";
 import {
@@ -13,7 +14,7 @@ import {
   DefaultTheme,
   DarkTheme,
 } from "@react-navigation/native";
-import { useAppStyles } from "../src/theme/useAppStyles";
+import { useTheme } from "../src/theme/useTheme";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -24,11 +25,14 @@ export default function RootLayout() {
     "Poppins-Bold": Poppins_700Bold,
   });
 
-  const { theme, scheme, styles } = useAppStyles();
+  const { theme, scheme } = useTheme();
 
   if (!fontsLoaded) {
     return (
-      <View style={styles.fullLoadingView}>
+      <View
+        className="flex-1 justify-center items-center"
+        style={{ backgroundColor: theme.primaryFill }}
+      >
         <ActivityIndicator size="large" color={theme.primaryOrange} />
       </View>
     );

@@ -1,16 +1,26 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useAppStyles } from "../../src/theme/useAppStyles";
+import { useTheme } from "../../src/theme/useTheme";
 
 export default function TabLayout() {
-  const { theme, styles } = useAppStyles();
+  const { theme } = useTheme();
 
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: styles.tabBar,
-        tabBarLabelStyle: styles.tabBarLabel,
+        tabBarStyle: {
+          backgroundColor: theme.surfaceFill,
+          borderTopWidth: 0.2,
+          borderTopColor: theme.stroke,
+          height: 90,
+          paddingTop: 8,
+        },
+        tabBarLabelStyle: {
+          fontSize: 14,
+          paddingBottom: 8,
+          fontFamily: "Poppins-Bold",
+        },
         tabBarActiveTintColor: theme.primaryOrange,
         tabBarInactiveTintColor: theme.stroke,
       }}

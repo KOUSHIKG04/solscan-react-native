@@ -9,10 +9,10 @@ import {
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { useAppStyles } from "../theme/useAppStyles";
+import { useTheme } from "../theme/useTheme";
 
 export default function SwapScreen() {
-  const { styles, theme, scheme, toggleScheme } = useAppStyles();
+  const { theme, scheme, toggleScheme } = useTheme();
 
   const [fromAmount, setFromAmount] = useState("100");
   const [toAmount, setToAmount] = useState("0.28014");
@@ -36,14 +36,28 @@ export default function SwapScreen() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView className="flex-1" style={{ backgroundColor: theme.primaryFill }}>
         <ScrollView
-          style={styles.swapScroll}
-          contentContainerStyle={styles.swapContent}
+          className="flex-1"
+          style={{ backgroundColor: theme.primaryFill }}
+          contentContainerClassName="px-5 pb-10"
         >
-          <View style={styles.swapHeaderRow}>
-            <Text style={styles.title}>SolSwap</Text>
-            <TouchableOpacity style={styles.themeToggle} onPress={toggleScheme}>
+          <View className="flex-row items-center relative">
+            <Text
+              className="text-[32px] mt-3 font-poppins-bold"
+              style={{ color: theme.text }}
+            >
+              SolSwap
+            </Text>
+            <TouchableOpacity
+              className="absolute right-0 p-2 rounded-lg border"
+              style={{
+                backgroundColor: theme.surfaceFill,
+                borderColor: theme.stroke,
+                borderWidth: 0.5,
+              }}
+              onPress={toggleScheme}
+            >
               <Ionicons
                 name={scheme === "light" ? "moon" : "sunny"}
                 size={16}
@@ -51,21 +65,48 @@ export default function SwapScreen() {
               />
             </TouchableOpacity>
           </View>
-          <Text style={styles.subtitle}>Swap your tokens instantly...</Text>
 
-          <View style={[styles.swapCard, { marginBottom: 10 }]}>
-            <View style={styles.swapCardHeader}>
-              <TouchableOpacity style={styles.swapTokenSelector}>
+          <Text
+            className="text-base mb-3.5 font-poppins"
+            style={{ color: theme.stroke }}
+          >
+            Swap your tokens instantly...
+          </Text>
+
+          <View
+            className="rounded-[20px] p-4 border mb-2.5"
+            style={{
+              backgroundColor: theme.surfaceFill,
+              borderColor: theme.stroke,
+              borderWidth: 0.25,
+            }}
+          >
+            <View className="flex-row justify-between items-center">
+              <TouchableOpacity
+                className="flex-row items-center rounded-[24px] pl-2 pr-3 py-2 gap-1.5 border"
+                style={{
+                  backgroundColor: theme.containerFill,
+                  borderColor: theme.stroke,
+                  borderWidth: 0.25,
+                }}
+              >
                 <View
-                  style={[styles.swapTokenIcon, { backgroundColor: "#9945FF" }]}
+                  className="w-8 h-8 rounded-full items-center justify-center"
+                  style={{ backgroundColor: "#9945FF" }}
                 >
-                  <Text style={styles.swapTokenIconText}>S</Text>
+                  <Text className="text-sm font-poppins-bold text-white">S</Text>
                 </View>
-                <Text style={styles.swapTokenName}>{fromToken}</Text>
+                <Text
+                  className="text-lg font-poppins-bold"
+                  style={{ color: theme.text }}
+                >
+                  {fromToken}
+                </Text>
                 <Ionicons name="chevron-down" size={18} color={theme.stroke} />
               </TouchableOpacity>
               <TextInput
-                style={styles.swapAmountInput}
+                className="text-[32px] font-poppins flex-1 ml-2.5 text-right"
+                style={{ color: theme.text }}
                 value={fromAmount}
                 onChangeText={setFromAmount}
                 keyboardType="numeric"
@@ -73,33 +114,64 @@ export default function SwapScreen() {
                 placeholderTextColor={theme.stroke}
               />
             </View>
-            <View style={styles.swapCardFooter}>
-              <Text style={styles.swapBalanceText}>
+            <View className="flex-row justify-between mt-3">
+              <Text className="text-sm font-poppins-medium" style={{ color: theme.stroke }}>
                 Balance: 0.0661 {fromToken}
               </Text>
-              <Text style={styles.swapUsdText}>$499.749</Text>
+              <Text className="text-sm font-poppins-medium" style={{ color: theme.stroke }}>
+                $499.749
+              </Text>
             </View>
           </View>
 
-          <View style={styles.swapArrowContainer}>
-            <TouchableOpacity style={styles.swapArrow} onPress={swapTokens}>
+          <View className="items-center" style={{ marginVertical: -22, zIndex: 10 }}>
+            <TouchableOpacity
+              className="w-11 h-11 rounded-xl items-center justify-center border"
+              style={{
+                backgroundColor: theme.primaryFill,
+                borderColor: theme.stroke,
+                borderWidth: 0.5,
+              }}
+              onPress={swapTokens}
+            >
               <Ionicons name="arrow-down" size={20} color={theme.text} />
             </TouchableOpacity>
           </View>
 
-          <View style={styles.swapCard}>
-            <View style={styles.swapCardHeader}>
-              <TouchableOpacity style={styles.swapTokenSelector}>
+          <View
+            className="rounded-[20px] p-4 border"
+            style={{
+              backgroundColor: theme.surfaceFill,
+              borderColor: theme.stroke,
+              borderWidth: 0.25,
+            }}
+          >
+            <View className="flex-row justify-between items-center">
+              <TouchableOpacity
+                className="flex-row items-center rounded-[24px] pl-2 pr-3 py-2 gap-1.5 border"
+                style={{
+                  backgroundColor: theme.containerFill,
+                  borderColor: theme.stroke,
+                  borderWidth: 0.25,
+                }}
+              >
                 <View
-                  style={[styles.swapTokenIcon, { backgroundColor: "#2775CA" }]}
+                  className="w-8 h-8 rounded-full items-center justify-center"
+                  style={{ backgroundColor: "#2775CA" }}
                 >
-                  <Text style={styles.swapTokenIconText}>$</Text>
+                  <Text className="text-sm font-poppins-bold text-white">$</Text>
                 </View>
-                <Text style={styles.swapTokenName}>{toToken}</Text>
+                <Text
+                  className="text-lg font-poppins-bold"
+                  style={{ color: theme.text }}
+                >
+                  {toToken}
+                </Text>
                 <Ionicons name="chevron-down" size={18} color={theme.stroke} />
               </TouchableOpacity>
               <TextInput
-                style={styles.swapAmountInput}
+                className="text-[32px] font-poppins flex-1 ml-2.5 text-right"
+                style={{ color: theme.text }}
                 value={toAmount}
                 onChangeText={setToAmount}
                 keyboardType="numeric"
@@ -107,14 +179,22 @@ export default function SwapScreen() {
                 placeholderTextColor={theme.stroke}
               />
             </View>
-            <View style={styles.swapCardFooter}>
-              <Text style={styles.swapBalanceText}>Balance: 250 {toToken}</Text>
-              <Text style={styles.swapUsdText}>$499.419</Text>
+            <View className="flex-row justify-between mt-3">
+              <Text className="text-sm font-poppins-medium" style={{ color: theme.stroke }}>
+                Balance: 250 {toToken}
+              </Text>
+              <Text className="text-sm font-poppins-medium" style={{ color: theme.stroke }}>
+                $499.419
+              </Text>
             </View>
           </View>
 
-          <TouchableOpacity style={styles.swapBtn} onPress={handleSwap}>
-            <Text style={styles.swapBtnText}>Swap</Text>
+          <TouchableOpacity
+            className="py-[18px] rounded-2xl items-center mt-6"
+            style={{ backgroundColor: theme.primaryOrange }}
+            onPress={handleSwap}
+          >
+            <Text className="text-white text-lg font-poppins-bold">Swap</Text>
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
