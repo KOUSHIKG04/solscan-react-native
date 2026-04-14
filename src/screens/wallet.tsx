@@ -7,15 +7,19 @@ import {
   ScrollView,
   ActivityIndicator,
   Linking,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../theme/useTheme";
 import { Token, Txn, getBalance, getTokens, getTxns } from "../utils/solanaApi";
 import { shortenAddress, timeAgo } from "../utils/formatters";
 import { Ionicons } from "@expo/vector-icons";
+import { useWalletStore } from "../stores/wallet-store";
 
 export default function WalletScreen() {
+  const [refreshing, setRefreshing] = useState(false);
   const [address, setAddress] = useState("");
+  const [lastSearchedAddress, setLastSearchedAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState<number | null>(null);
   const [tokens, setTokens] = useState<Token[]>([]);
@@ -27,37 +31,66 @@ export default function WalletScreen() {
   const [loadingTokensMore, setLoadingTokensMore] = useState(false);
 
   const { theme, scheme, toggleScheme } = useTheme();
+  const isDevnet = useWalletStore((s) => s.isDevnet);
+  const toggleNetwork = useWalletStore((s) => s.toggleNetwork);
+  const addToHistory = useWalletStore((s) => s.addToHistory);
+  const searchHistory = useWalletStore((s) => s.searchHistory);
+  const clearHistory = useWalletStore((s) => s.clearHistory);
 
-  const handleSearch = async () => {
-    if (!address.trim()) {
+  const handleSearch = async (targetAddress?: string) => {
+    const searchAddr = targetAddress || address;
+    if (!searchAddr.trim()) {
       setError("Please enter a search string or wallet address");
       return;
     }
+
+    if (targetAddress) {
+      setAddress(targetAddress);
+    }
+
+    const isNewAddress = searchAddr.trim() !== lastSearchedAddress;
+
     setLoading(true);
     setError(null);
-    setBalance(null);
-    setTokens([]);
-    setTxns([]);
-    setTxnsLimit(5);
-    setTokensLimit(5);
+
+    if (isNewAddress) {
+      setBalance(null);
+      setTokens([]);
+      setTxns([]);
+      setTxnsLimit(5);
+      setTokensLimit(5);
+    }
 
     try {
       const [bal, toks, history] = await Promise.all([
-        getBalance(address),
-        getTokens(address).catch(() => []),
-        getTxns(address).catch(() => []),
+        getBalance(searchAddr, isDevnet),
+        getTokens(searchAddr, isDevnet).catch(() => []),
+        getTxns(searchAddr, isDevnet).catch(() => []),
+        addToHistory(searchAddr),
       ]);
       setBalance(bal);
       setTokens(toks);
       setTxns(history);
+      setLastSearchedAddress(searchAddr.trim());
     } catch (err: any) {
       setError(err.message || "Invalid or unreachable address.");
-      setBalance(null);
-      setTokens([]);
-      setTxns([]);
     } finally {
       setLoading(false);
     }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    if (!address.trim()) {
+      setBalance(null);
+      setTokens([]);
+      setTxns([]);
+      setError(null);
+      setLastSearchedAddress("");
+    } else {
+      await handleSearch();
+    }
+    setRefreshing(false);
   };
 
   return (
@@ -69,31 +102,67 @@ export default function WalletScreen() {
         <ScrollView
           className="flex-1"
           contentContainerClassName="px-5"
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={theme.primaryOrange}
+              colors={[theme.primaryOrange]}
+              progressBackgroundColor={theme.surfaceFill}
+            />
+          }
         >
-          
-          <View className="flex-row items-center mb-0.5 relative">
+          <View className="flex-row items-center relative">
             <Text
               className="text-[32px] mt-3 font-poppins-bold"
               style={{ color: theme.text }}
             >
               SolScan
             </Text>
-            <TouchableOpacity
-              className="absolute right-0 p-2 rounded-lg border"
-              style={{
-                backgroundColor: theme.surfaceFill,
-                borderColor: theme.stroke,
-                borderWidth: 0.5,
-              }}
-              onPress={toggleScheme}
-            >
-              <Ionicons
-                name={scheme === "light" ? "moon" : "sunny"}
-                size={16}
-                color={theme.text}
-              />
-            </TouchableOpacity>
+            <View className="absolute right-0 flex-row items-center gap-2 mt-3">
+              <TouchableOpacity
+                onPress={toggleNetwork}
+                className="px-3 py-1.5 rounded-full border"
+                style={{
+                  backgroundColor: isDevnet ? theme.primaryOrange : "transparent",
+                  borderColor: isDevnet ? theme.primaryOrange : theme.stroke,
+                }}
+              >
+                <Text
+                  className="text-[10px] font-poppins-bold"
+                  style={{ color: isDevnet ? theme.whiteConstant : theme.stroke }}
+                >
+                  {isDevnet ? "DEVNET" : "MAINNET"}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="p-2 rounded-lg border"
+                style={{
+                  backgroundColor: theme.surfaceFill,
+                  borderColor: theme.stroke,
+                  borderWidth: 0.5,
+                }}
+                onPress={toggleScheme}
+              >
+                <Ionicons
+                  name={scheme === "light" ? "moon" : "sunny"}
+                  size={16}
+                  color={theme.text}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
+
+          {isDevnet && (
+            <View
+              className="mt-2 p-2 rounded-lg items-center justify-center"
+              style={{ backgroundColor: "#FF5C0022", borderStyle: "dashed", borderWidth: 1, borderColor: theme.primaryOrange }}
+            >
+              <Text className="text-[11px] font-poppins-medium" style={{ color: theme.primaryOrange }}>
+                🔧 DEVNET MODE ACTIVE
+              </Text>
+            </View>
+          )}
 
           <Text
             className="text-base mb-3.5 font-poppins"
@@ -102,14 +171,18 @@ export default function WalletScreen() {
             Explore any Solona Wallet here...
           </Text>
 
-          <View className="flex-row mb-3 rounded-lg">
+          <View
+            className="flex-row items-center mb-3 rounded-lg border"
+            style={{
+              backgroundColor: theme.surfaceFill,
+              borderColor: theme.stroke,
+              borderWidth: 0.25,
+            }}
+          >
             <TextInput
-              className="flex-1 p-3.5 text-base rounded-lg border font-poppins"
+              className="flex-1 py-3.5 pl-3 text-base font-poppins"
               style={{
-                backgroundColor: theme.surfaceFill,
                 color: theme.text,
-                borderColor: theme.stroke,
-                borderWidth: 0.25,
               }}
               placeholder="Solana Address"
               placeholderTextColor={theme.stroke}
@@ -118,25 +191,96 @@ export default function WalletScreen() {
               autoCapitalize="none"
               autoCorrect={false}
             />
+            {address.length > 0 && (
+              <TouchableOpacity
+                onPress={() => setAddress("")}
+                className="p-2"
+                hitSlop={{ top: 1, bottom: 10, left: 10, right: 10 }}
+              >
+                <Ionicons name="close-circle" size={20} color={theme.stroke} />
+              </TouchableOpacity>
+            )}
           </View>
 
-          {/* Search Button */}
-          <View>
+          <View className="flex-row items-center mb-6" style={{ gap: 10 }}>
             <TouchableOpacity
-              className="flex-1 p-3 items-center justify-center rounded-xl mb-6"
-              style={{ backgroundColor: theme.primaryOrange }}
-              onPress={handleSearch}
+              className="p-4 items-center justify-center rounded-xl shadow-sm"
+              style={{ backgroundColor: theme.primaryOrange, flex: 2 }}
+              onPress={() => handleSearch()}
               disabled={loading}
             >
               {loading ? (
                 <ActivityIndicator color={theme.whiteConstant} />
               ) : (
-                <Text className="text-white text-base font-poppins-bold">
+                <Text
+                  className="text-base font-poppins-bold"
+                  style={{ color: theme.whiteConstant }}
+                >
                   Search
                 </Text>
               )}
             </TouchableOpacity>
+
+            <TouchableOpacity
+              className="p-4 items-center justify-center rounded-xl border shadow-sm"
+              style={{
+                borderColor: theme.stroke,
+                backgroundColor: theme.surfaceFill,
+                flex: 1,
+              }}
+              onPress={() => {
+                setAddress("86xCnPeV69n6t3DnyGvkKobf9FdN2H9oiVDdaMpo2MMY");
+                setBalance(null);
+                setTokens([]);
+                setTxns([]);
+              }}
+            >
+              <Text
+                className="text-base font-poppins-bold"
+                style={{ color: theme.text }}
+              >
+                Demo
+              </Text>
+            </TouchableOpacity>
           </View>
+
+          {/* Search History */}
+          {!loading && balance === null && searchHistory.length > 0 && (
+            <View className="mb-6">
+              <View className="flex-row justify-between items-center mb-3">
+                <Text
+                  className="text-base font-poppins-bold"
+                  style={{ color: theme.text }}
+                >
+                  Recent Searches
+                </Text>
+                <TouchableOpacity onPress={clearHistory}>
+                   <Text className="text-xs font-poppins" style={{ color: theme.stroke }}>Clear</Text>
+                </TouchableOpacity>
+              </View>
+              <View className="flex-row flex-wrap gap-2">
+                {searchHistory.slice(0, 5).map((addr) => (
+                  <TouchableOpacity
+                    key={addr}
+                    onPress={() => handleSearch(addr)}
+                    className="px-3 py-2 rounded-lg border"
+                    style={{
+                      backgroundColor: theme.containerFill,
+                      borderColor: theme.stroke,
+                      borderWidth: 0.25,
+                    }}
+                  >
+                    <Text
+                      className="text-xs font-poppins"
+                      style={{ color: theme.text }}
+                    >
+                      {shortenAddress(addr, 4)}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          )}
 
           {/* Error Card */}
           {error && !loading && (
@@ -157,7 +301,6 @@ export default function WalletScreen() {
             </View>
           )}
 
-     
           {(loading || (!error && balance !== null)) && (
             <View
               className="p-4 mb-4 rounded-lg border"
@@ -246,7 +389,13 @@ export default function WalletScreen() {
                     </Text>
                   </View>
 
-                  <View style={{ flex: 0.5, alignItems: "flex-end", justifyContent: "center" }}>
+                  <View
+                    style={{
+                      flex: 0.5,
+                      alignItems: "flex-end",
+                      justifyContent: "center",
+                    }}
+                  >
                     <Text
                       className="font-poppins-medium text-[10px] tracking-widest"
                       style={{ color: theme.stroke }}
@@ -277,7 +426,11 @@ export default function WalletScreen() {
                       onPress={() => setTxnsLimit(5)}
                       className="p-2.5 items-center"
                     >
-                      <Ionicons name="chevron-up" size={24} color={theme.stroke} />
+                      <Ionicons
+                        name="chevron-up"
+                        size={24}
+                        color={theme.stroke}
+                      />
                     </TouchableOpacity>
                   )}
                   {txnsLimit < txns.length && (
@@ -292,9 +445,16 @@ export default function WalletScreen() {
                       className="p-2.5 items-center"
                     >
                       {loadingTxnsMore ? (
-                        <ActivityIndicator color={theme.primaryOrange} size="small" />
+                        <ActivityIndicator
+                          color={theme.primaryOrange}
+                          size="small"
+                        />
                       ) : (
-                        <Ionicons name="chevron-down" size={24} color={theme.stroke} />
+                        <Ionicons
+                          name="chevron-down"
+                          size={24}
+                          color={theme.stroke}
+                        />
                       )}
                     </TouchableOpacity>
                   )}
@@ -352,7 +512,13 @@ export default function WalletScreen() {
                     </Text>
                   </View>
 
-                  <View style={{ flex: 0.5, alignItems: "flex-end", justifyContent: "center" }}>
+                  <View
+                    style={{
+                      flex: 0.5,
+                      alignItems: "flex-end",
+                      justifyContent: "center",
+                    }}
+                  >
                     <Text
                       className="font-poppins-medium text-[10px] tracking-widest"
                       style={{ color: theme.stroke }}
@@ -383,7 +549,11 @@ export default function WalletScreen() {
                       onPress={() => setTokensLimit(5)}
                       className="p-2.5 items-center"
                     >
-                      <Ionicons name="chevron-up" size={24} color={theme.stroke} />
+                      <Ionicons
+                        name="chevron-up"
+                        size={24}
+                        color={theme.stroke}
+                      />
                     </TouchableOpacity>
                   )}
                   {tokensLimit < tokens.length && (
@@ -398,9 +568,16 @@ export default function WalletScreen() {
                       className="p-2.5 items-center"
                     >
                       {loadingTokensMore ? (
-                        <ActivityIndicator color={theme.primaryOrange} size="small" />
+                        <ActivityIndicator
+                          color={theme.primaryOrange}
+                          size="small"
+                        />
                       ) : (
-                        <Ionicons name="chevron-down" size={24} color={theme.stroke} />
+                        <Ionicons
+                          name="chevron-down"
+                          size={24}
+                          color={theme.stroke}
+                        />
                       )}
                     </TouchableOpacity>
                   )}
@@ -409,9 +586,7 @@ export default function WalletScreen() {
             </View>
           )}
 
-          {(txns.length > 0 || tokens.length > 0) && (
-            <View className="h-5" />
-          )}
+          {(txns.length > 0 || tokens.length > 0) && <View className="h-5" />}
         </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>
