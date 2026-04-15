@@ -15,6 +15,7 @@ import { Token, Txn, getBalance, getTokens, getTxns } from "../utils/solanaApi";
 import { shortenAddress, timeAgo } from "../utils/formatters";
 import { Ionicons } from "@expo/vector-icons";
 import { useWalletStore } from "../stores/wallet-store";
+import DevAndMain from "../components/DevAndMain";
 
 export default function WalletScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -30,9 +31,9 @@ export default function WalletScreen() {
   const [loadingTxnsMore, setLoadingTxnsMore] = useState(false);
   const [loadingTokensMore, setLoadingTokensMore] = useState(false);
 
-  const { theme, scheme, toggleScheme } = useTheme();
+  const { theme } = useTheme();
   const isDevnet = useWalletStore((s) => s.isDevnet);
-  const toggleNetwork = useWalletStore((s) => s.toggleNetwork);
+  // const toggleNetwork = useWalletStore((s) => s.toggleNetwork);
   const addToHistory = useWalletStore((s) => s.addToHistory);
   const searchHistory = useWalletStore((s) => s.searchHistory);
   const clearHistory = useWalletStore((s) => s.clearHistory);
@@ -115,54 +116,14 @@ export default function WalletScreen() {
           <View className="flex-row items-center relative">
             <Text
               className="text-[32px] mt-3 font-poppins-bold"
-              style={{ color: theme.text }}
+              style={{ color: theme.text, includeFontPadding: false }}
             >
               SolScan
             </Text>
-            <View className="absolute right-0 flex-row items-center gap-2 mt-3">
-              <TouchableOpacity
-                onPress={toggleNetwork}
-                className="px-3 py-1.5 rounded-full border"
-                style={{
-                  backgroundColor: isDevnet ? theme.primaryOrange : "transparent",
-                  borderColor: isDevnet ? theme.primaryOrange : theme.stroke,
-                }}
-              >
-                <Text
-                  className="text-[10px] font-poppins-bold"
-                  style={{ color: isDevnet ? theme.whiteConstant : theme.stroke }}
-                >
-                  {isDevnet ? "DEVNET" : "MAINNET"}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="p-2 rounded-lg border"
-                style={{
-                  backgroundColor: theme.surfaceFill,
-                  borderColor: theme.stroke,
-                  borderWidth: 0.5,
-                }}
-                onPress={toggleScheme}
-              >
-                <Ionicons
-                  name={scheme === "light" ? "moon" : "sunny"}
-                  size={16}
-                  color={theme.text}
-                />
-              </TouchableOpacity>
+            <View className="absolute right-0 flex-row items-center gap-2 mt-3 ">
+              <DevAndMain />
             </View>
           </View>
-
-          {isDevnet && (
-            <View
-              className="mt-2 p-2 rounded-lg items-center justify-center"
-              style={{ backgroundColor: "#FF5C0022", borderStyle: "dashed", borderWidth: 1, borderColor: theme.primaryOrange }}
-            >
-              <Text className="text-[11px] font-poppins-medium" style={{ color: theme.primaryOrange }}>
-                🔧 DEVNET MODE ACTIVE
-              </Text>
-            </View>
-          )}
 
           <Text
             className="text-base mb-3.5 font-poppins"
@@ -171,6 +132,7 @@ export default function WalletScreen() {
             Explore any Solona Wallet here...
           </Text>
 
+          <View style={{ marginTop: 20 }}></View>
           <View
             className="flex-row items-center mb-3 rounded-lg border"
             style={{
@@ -244,7 +206,6 @@ export default function WalletScreen() {
             </TouchableOpacity>
           </View>
 
-          {/* Search History */}
           {!loading && balance === null && searchHistory.length > 0 && (
             <View className="mb-6">
               <View className="flex-row justify-between items-center mb-3">
@@ -255,34 +216,50 @@ export default function WalletScreen() {
                   Recent Searches
                 </Text>
                 <TouchableOpacity onPress={clearHistory}>
-                   <Text className="text-xs font-poppins" style={{ color: theme.stroke }}>Clear</Text>
+                  <Text
+                    className="text-xs font-poppins"
+                    style={{ color: theme.stroke }}
+                  >
+                    Clear
+                  </Text>
                 </TouchableOpacity>
               </View>
-              <View className="flex-row flex-wrap gap-2">
+              <View className="gap-4">
                 {searchHistory.slice(0, 5).map((addr) => (
                   <TouchableOpacity
                     key={addr}
                     onPress={() => handleSearch(addr)}
-                    className="px-3 py-2 rounded-lg border"
+                    className="p-5 rounded-lg border w-full flex-row items-center justify-between"
                     style={{
                       backgroundColor: theme.containerFill,
                       borderColor: theme.stroke,
                       borderWidth: 0.25,
                     }}
                   >
-                    <Text
-                      className="text-xs font-poppins"
-                      style={{ color: theme.text }}
-                    >
-                      {shortenAddress(addr, 4)}
-                    </Text>
+                    <View className="flex-row items-center gap-3 mr-2 ">
+                      <Ionicons
+                        name="time-outline"
+                        size={16}
+                        color={theme.stroke}
+                      />
+                      <Text
+                        className="text-xs font-poppins"
+                        style={{ color: theme.text }}
+                      >
+                        {shortenAddress(addr, 20)}
+                      </Text>
+                    </View>
+                    <Ionicons
+                      name="chevron-forward"
+                      size={16}
+                      color={theme.stroke}
+                    />
                   </TouchableOpacity>
                 ))}
               </View>
             </View>
           )}
 
-          {/* Error Card */}
           {error && !loading && (
             <View
               className="p-4 mb-4 rounded-lg border"

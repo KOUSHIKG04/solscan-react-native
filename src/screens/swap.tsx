@@ -10,9 +10,10 @@ import {
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../theme/useTheme";
+import DevAndMain from "../components/DevAndMain";
 
 export default function SwapScreen() {
-  const { theme, scheme, toggleScheme } = useTheme();
+  const { theme } = useTheme();
 
   const [fromAmount, setFromAmount] = useState("100");
   const [toAmount, setToAmount] = useState("0.28014");
@@ -36,7 +37,10 @@ export default function SwapScreen() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className="flex-1" style={{ backgroundColor: theme.primaryFill }}>
+      <SafeAreaView
+        className="flex-1"
+        style={{ backgroundColor: theme.primaryFill }}
+      >
         <ScrollView
           className="flex-1"
           style={{ backgroundColor: theme.primaryFill }}
@@ -45,25 +49,13 @@ export default function SwapScreen() {
           <View className="flex-row items-center relative">
             <Text
               className="text-[32px] mt-3 font-poppins-bold"
-              style={{ color: theme.text }}
+              style={{ color: theme.text, includeFontPadding: false }}
             >
               SolSwap
             </Text>
-            <TouchableOpacity
-              className="absolute right-0 p-2 rounded-lg border"
-              style={{
-                backgroundColor: theme.surfaceFill,
-                borderColor: theme.stroke,
-                borderWidth: 0.5,
-              }}
-              onPress={toggleScheme}
-            >
-              <Ionicons
-                name={scheme === "light" ? "moon" : "sunny"}
-                size={16}
-                color={theme.text}
-              />
-            </TouchableOpacity>
+            <View className="absolute right-0 flex-row items-center gap-2 mt-3 ">
+              <DevAndMain />
+            </View>
           </View>
 
           <Text
@@ -73,8 +65,9 @@ export default function SwapScreen() {
             Swap your tokens instantly...
           </Text>
 
+          <View style={{ marginTop: 20 }}></View>
           <View
-            className="rounded-[20px] p-4 border mb-2.5"
+            className="rounded-[20px] p-4 border mb-2.5 "
             style={{
               backgroundColor: theme.surfaceFill,
               borderColor: theme.stroke,
@@ -94,7 +87,9 @@ export default function SwapScreen() {
                   className="w-8 h-8 rounded-full items-center justify-center"
                   style={{ backgroundColor: "#9945FF" }}
                 >
-                  <Text className="text-sm font-poppins-bold text-white">S</Text>
+                  <Text className="text-sm font-poppins-bold text-white">
+                    S
+                  </Text>
                 </View>
                 <Text
                   className="text-lg font-poppins-bold"
@@ -115,16 +110,25 @@ export default function SwapScreen() {
               />
             </View>
             <View className="flex-row justify-between mt-3">
-              <Text className="text-sm font-poppins-medium" style={{ color: theme.stroke }}>
+              <Text
+                className="text-sm font-poppins-medium"
+                style={{ color: theme.stroke }}
+              >
                 Balance: 0.0661 {fromToken}
               </Text>
-              <Text className="text-sm font-poppins-medium" style={{ color: theme.stroke }}>
+              <Text
+                className="text-sm font-poppins-medium"
+                style={{ color: theme.stroke }}
+              >
                 $499.749
               </Text>
             </View>
           </View>
 
-          <View className="items-center" style={{ marginVertical: -22, zIndex: 10 }}>
+          <View
+            className="items-center"
+            style={{ marginVertical: -22, zIndex: 10 }}
+          >
             <TouchableOpacity
               className="w-11 h-11 rounded-xl items-center justify-center border"
               style={{
@@ -159,7 +163,9 @@ export default function SwapScreen() {
                   className="w-8 h-8 rounded-full items-center justify-center"
                   style={{ backgroundColor: "#2775CA" }}
                 >
-                  <Text className="text-sm font-poppins-bold text-white">$</Text>
+                  <Text className="text-sm font-poppins-bold text-white">
+                    $
+                  </Text>
                 </View>
                 <Text
                   className="text-lg font-poppins-bold"
@@ -180,10 +186,16 @@ export default function SwapScreen() {
               />
             </View>
             <View className="flex-row justify-between mt-3">
-              <Text className="text-sm font-poppins-medium" style={{ color: theme.stroke }}>
+              <Text
+                className="text-sm font-poppins-medium"
+                style={{ color: theme.stroke }}
+              >
                 Balance: 250 {toToken}
               </Text>
-              <Text className="text-sm font-poppins-medium" style={{ color: theme.stroke }}>
+              <Text
+                className="text-sm font-poppins-medium"
+                style={{ color: theme.stroke }}
+              >
                 $499.419
               </Text>
             </View>

@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import { useColorScheme } from "react-native";
+import { useColorScheme, Appearance } from "react-native";
 import { THEME_COLORS } from "./colors";
 
-type SchemeType = "light" | "dark" | null;
+type SchemeType = "light" | "dark" | "system";
 
 // Global state to allow manual theme overrides to instantly cascade across all screens
-let globalManualScheme: SchemeType = null;
+let globalManualScheme: SchemeType = "system";
 const schemeListeners = new Set<(scheme: SchemeType) => void>();
 
 const setGlobalScheme = (newScheme: SchemeType) => {
@@ -14,7 +14,9 @@ const setGlobalScheme = (newScheme: SchemeType) => {
 };
 
 export const useTheme = () => {
-  const systemScheme = useColorScheme() || "light";
+  // Appearance.getColorScheme() is synchronous — always returns the correct system
+  // theme on the very first render, unlike useColorScheme() which can be null initially
+  const systemScheme = useColorScheme() ?? (Appearance.getColorScheme() ?? "light");
   const [manualScheme, setManualScheme] = useState<SchemeType>(globalManualScheme);
 
   useEffect(() => {
@@ -25,14 +27,37 @@ export const useTheme = () => {
     };
   }, []);
 
-  const scheme = manualScheme || systemScheme;
-  const activeSchemeKey = (scheme === "dark" || scheme === "light" ? scheme : "light") as "light" | "dark";
-  const theme = THEME_COLORS[activeSchemeKey];
+  const resolvedScheme =
+    manualScheme === "system" || !manualScheme
+      ? systemScheme
+      : manualScheme;
+  const theme = THEME_COLORS[resolvedScheme as "light" | "dark"];
+
+  const setScheme = useCallback((newScheme: SchemeType) => {
+    setGlobalScheme(newScheme);
+  }, []);
 
   const toggleScheme = useCallback(() => {
-    const current = globalManualScheme || systemScheme;
-    setGlobalScheme(current === "light" ? "dark" : "light");
-  }, [systemScheme]);
+    if (manualScheme === "system") {
+      // first click → override system
+      setGlobalScheme(systemScheme === "dark" ? "light" : "dark");
+    } else {
+      // toggle between light/dark
+      setGlobalScheme(manualScheme === "light" ? "dark" : "light");
+    }
+  }, [manualScheme, systemScheme]);
 
-  return { theme, scheme: activeSchemeKey, toggleScheme };
+  // console.log("System:", systemScheme);
+  // console.log("Manual:", manualScheme);
+
+
+  return {
+    theme,
+    resolvedScheme,
+    manualScheme,
+    scheme: resolvedScheme,
+    setScheme,
+    toggleScheme,
+    // setScheme: setGlobalScheme,
+  };
 };
