@@ -12,10 +12,11 @@ import {
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../theme/useTheme";
 import { Token, Txn, getBalance, getTokens, getTxns } from "../utils/solanaApi";
-import { shortenAddress, timeAgo } from "../utils/formatters";
+import { formatAddress, shortenAddress, timeAgo } from "../utils/formatters";
 import { Ionicons } from "@expo/vector-icons";
 import { useWalletStore } from "../stores/wallet-store";
 import DevAndMain from "../components/DevAndMain";
+import { FavoriteButton } from "../components/FavoriteButton";
 
 export default function WalletScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -134,7 +135,7 @@ export default function WalletScreen() {
 
           <View style={{ marginTop: 20 }}></View>
           <View
-            className="flex-row items-center mb-3 rounded-lg border"
+            className="flex-row items-center mb-3  border rounded-[20px]"
             style={{
               backgroundColor: theme.surfaceFill,
               borderColor: theme.stroke,
@@ -142,9 +143,12 @@ export default function WalletScreen() {
             }}
           >
             <TextInput
-              className="flex-1 py-3.5 pl-3 text-base font-poppins"
+              className="flex-1 py-3.5 pl-3 text-base font-poppins rounded-[20px]"
               style={{
                 color: theme.text,
+                includeFontPadding: false,
+                textAlignVertical: "center",
+                marginLeft: 12,
               }}
               placeholder="Solana Address"
               placeholderTextColor={theme.stroke}
@@ -166,7 +170,7 @@ export default function WalletScreen() {
 
           <View className="flex-row items-center mb-6" style={{ gap: 10 }}>
             <TouchableOpacity
-              className="p-4 items-center justify-center rounded-xl shadow-sm"
+              className="p-4 items-center justify-center rounded-[20px] shadow-sm"
               style={{ backgroundColor: theme.primaryOrange, flex: 2 }}
               onPress={() => handleSearch()}
               disabled={loading}
@@ -184,7 +188,7 @@ export default function WalletScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="p-4 items-center justify-center rounded-xl border shadow-sm"
+              className="p-4 items-center justify-center rounded-[20px] border shadow-sm"
               style={{
                 borderColor: theme.stroke,
                 backgroundColor: theme.surfaceFill,
@@ -207,8 +211,8 @@ export default function WalletScreen() {
           </View>
 
           {!loading && balance === null && searchHistory.length > 0 && (
-            <View className="mb-6">
-              <View className="flex-row justify-between items-center mb-3">
+            <View className="mb-6 ">
+              <View className="flex-row justify-between items-center mb-3 ">
                 <Text
                   className="text-base font-poppins-bold"
                   style={{ color: theme.text }}
@@ -229,7 +233,7 @@ export default function WalletScreen() {
                   <TouchableOpacity
                     key={addr}
                     onPress={() => handleSearch(addr)}
-                    className="p-5 rounded-lg border w-full flex-row items-center justify-between"
+                    className="p-5 rounded-[20px] border w-full flex-row items-center justify-between"
                     style={{
                       backgroundColor: theme.containerFill,
                       borderColor: theme.stroke,
@@ -280,32 +284,66 @@ export default function WalletScreen() {
 
           {(loading || (!error && balance !== null)) && (
             <View
-              className="p-4 mb-4 rounded-lg border"
+              className="mb-4 rounded-[20px] border"
               style={{
                 backgroundColor: theme.surfaceFill,
                 borderColor: theme.stroke,
                 borderWidth: 0.25,
+                padding: 22,
               }}
             >
+              <View style={{ position: "absolute", top: 14, right: 14 }}>
+                <FavoriteButton address={lastSearchedAddress} />
+              </View>
+
               <Text
-                className="text-lg mb-1 font-poppins-bold"
+                className="text-[22px] font-poppins-bold text-center tracking-widest"
                 style={{ color: theme.text }}
               >
-                Balance
+                SOL BALANCE
               </Text>
               {loading ? (
                 <ActivityIndicator
                   color={theme.primaryOrange}
-                  size="small"
-                  style={{ alignSelf: "flex-start", marginVertical: 4 }}
+                  size="large"
+                  style={{ alignSelf: "center", marginVertical: 12 }}
                 />
               ) : (
-                <Text
-                  className="text-[28px] font-poppins-bold"
-                  style={{ color: theme.primaryOrange }}
-                >
-                  {balance ? balance.toFixed(4) : 0} SOL
-                </Text>
+                <View>
+                  <Text
+                    className="text-[32px] font-poppins-bold text-center mt-2"
+                    style={{ color: theme.primaryOrange }}
+                  >
+                    {balance ? balance.toFixed(4) : 0}
+                    <Text className="text-[22px]"> SOL</Text>
+                  </Text>
+                  <View className="flex-row justify-center items-center mt-2">
+                    <View
+                      className="flex-row items-center gap-2 px-5 py-3 rounded-[20px]"
+                      style={{
+                        backgroundColor: theme.containerFill,
+                        borderColor: theme.stroke,
+                        borderWidth: 0.25,
+                      }}
+                    >
+                      <Ionicons
+                        name="wallet-outline"
+                        size={13}
+                        color={theme.text}
+                      />
+                      <Text
+                        className="text-[12px] font-poppins-medium"
+                        style={{
+                          color: theme.stroke,
+                          includeFontPadding: false,
+                          textAlignVertical: "center",
+                        }}
+                      >
+                        {formatAddress(lastSearchedAddress)}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
               )}
             </View>
           )}
@@ -321,7 +359,7 @@ export default function WalletScreen() {
               {txns.slice(0, txnsLimit).map((tx, index) => (
                 <View
                   key={index}
-                  className="flex-row justify-between items-start p-3.5 mb-2 rounded-lg border"
+                  className="flex-row justify-between items-start p-3.5 mb-2 rounded-[20px] border"
                   style={{
                     backgroundColor: theme.containerFill,
                     borderColor: theme.stroke,
@@ -401,7 +439,11 @@ export default function WalletScreen() {
                   {txnsLimit > 5 && (
                     <TouchableOpacity
                       onPress={() => setTxnsLimit(5)}
-                      className="p-2.5 items-center"
+                      className="p-2.5 items-center rounded-[12px]"
+                      style={{
+                        borderWidth: 0.25,
+                        borderColor: theme.stroke,
+                      }}
                     >
                       <Ionicons
                         name="chevron-up"
@@ -419,7 +461,11 @@ export default function WalletScreen() {
                           setLoadingTxnsMore(false);
                         }, 300);
                       }}
-                      className="p-2.5 items-center"
+                      className="p-2.5 items-center rounded-[12px]"
+                      style={{
+                        borderWidth: 0.25,
+                        borderColor: theme.stroke,
+                      }}
                     >
                       {loadingTxnsMore ? (
                         <ActivityIndicator
@@ -451,7 +497,7 @@ export default function WalletScreen() {
               {tokens.slice(0, tokensLimit).map((t, i) => (
                 <View
                   key={i}
-                  className="flex-row justify-between items-start p-3.5 mb-2 rounded-lg border"
+                  className="flex-row justify-between items-start p-3.5 mb-2 rounded-[20px] border"
                   style={{
                     backgroundColor: theme.containerFill,
                     borderColor: theme.stroke,
@@ -542,7 +588,11 @@ export default function WalletScreen() {
                           setLoadingTokensMore(false);
                         }, 300);
                       }}
-                      className="p-2.5 items-center"
+                      className="p-2.5 items-center rounded-[12px]"
+                      style={{
+                        borderWidth: 0.25,
+                        borderColor: theme.stroke,
+                      }}
                     >
                       {loadingTokensMore ? (
                         <ActivityIndicator

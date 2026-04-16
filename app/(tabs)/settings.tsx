@@ -1,4 +1,5 @@
 import { View, Text, Switch, TouchableOpacity, ScrollView } from "react-native";
+import { useRouter } from "expo-router";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../../src/theme/useTheme";
 import { useWalletStore } from "../../src/stores/wallet-store";
@@ -7,6 +8,7 @@ import { useState } from "react";
 import ConfirmModal from "../../src/components/ConfirmModal";
 
 export default function SettingsScreen() {
+  const router = useRouter();
   const { theme, scheme, manualScheme, setScheme } = useTheme();
   const isDevnet = useWalletStore((s) => s.isDevnet);
   const toggleNetwork = useWalletStore((s) => s.toggleNetwork);
@@ -60,15 +62,7 @@ export default function SettingsScreen() {
                     className="font-poppins-bold text-base"
                     style={{ color: theme.text }}
                   >
-                    Use Devnet
-                  </Text>
-                  <Text
-                    className="text-xs font-poppins mt-1"
-                    style={{ color: theme.stroke }}
-                  >
-                    {isDevnet
-                      ? "Testing network (free SOL)"
-                      : "Real Solana network"}
+                    Use DEVNET
                   </Text>
                 </View>
 
@@ -110,6 +104,7 @@ export default function SettingsScreen() {
                   onPress={() =>
                     setScheme(scheme === "dark" ? "light" : "dark")
                   }
+                  style={{ marginRight: 13 }}
                 >
                   <Ionicons
                     name={scheme === "dark" ? "moon" : "sunny-outline"}
@@ -120,13 +115,46 @@ export default function SettingsScreen() {
               </View>
             </View>
 
+            {/* <View
+              className="rounded-[20px] py-4 px-6 border mb-4"
+              style={{
+                backgroundColor: theme.surfaceFill,
+                borderColor: theme.stroke,
+                borderWidth: 0.25,
+              }}
+            >
+              <View className="flex-row items-center justify-between py-2 px-22">
+                <Text
+                  className="font-poppins-bold "
+                  style={{ color: theme.text, includeFontPadding: false }}
+                >
+                  System Default
+                </Text>
+
+                <TouchableOpacity
+                  onPress={() =>
+                    setScheme(scheme === "dark" ? "light" : "dark")
+                  }
+                  style={{ marginRight: 13 }}
+                >
+                  <Ionicons
+                    name={scheme === "dark" ? "moon" : "sunny-outline"}
+                    size={18}
+                    color={theme.stroke}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View> */}
+
             <Text
               className="text-[12px] font-poppins-bold tracking-widest mb-2"
               style={{ color: theme.stroke }}
             >
               STATS
             </Text>
-            <View
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => router.push("/watchlist/watchlist")}
               className="rounded-[20px] py-4 px-6 border mb-4 gap-4"
               style={{
                 backgroundColor: theme.surfaceFill,
@@ -156,7 +184,7 @@ export default function SettingsScreen() {
                   />
                 </View>
               </View>
-            </View>
+            </TouchableOpacity>
 
             <View
               className="rounded-[20px] py-4 px-6 border mb-4 gap-4"

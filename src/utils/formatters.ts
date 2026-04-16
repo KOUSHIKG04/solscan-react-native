@@ -14,3 +14,10 @@ export const timeAgo = (timestamp: number) => {
   const days = Math.floor(hours / 24);
   return `${days}d ago`;
 };
+
+export const formatAddress = (addr: string) => {
+  if (!addr) return "";
+  if (addr.length <= 10) return addr;
+
+  return `${addr.slice(0, 7)}.....${addr.slice(-5)}`;
+};
