@@ -1,37 +1,29 @@
-import {
-  TouchableOpacity,
-  Text,
-  ActivityIndicator,
-  View,
-} from "react-native";
+import { TouchableOpacity, Text, ActivityIndicator, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../theme/useTheme";
 
 interface Props {
-  connected: boolean;
-  connecting: boolean;
-  publicKey: string | null;
-  onConnect: () => void;
-  onDisconnect: () => void;
+  wallet: {
+    connect: () => Promise<any>;
+    disconnect: () => void;
+    connected: boolean;
+    connecting: boolean;
+    publicKey: any; // or PublicKey if you import it
+  };
 }
 
-export function ConnectButton({
-  connected,
-  connecting,
-  publicKey,
-  onConnect,
-  onDisconnect,
-}: Props) {
+export default function ConnectButton({ wallet }: Props) {
+  const { connect, disconnect, connected, connecting, publicKey } = wallet;
   const { theme } = useTheme();
 
   if (connecting) {
     return (
-      <View 
+      <View
         className="flex-row items-center px-4 py-2.5 rounded-full gap-2 opacity-80"
         style={{ backgroundColor: theme.surfaceFill }}
       >
         <ActivityIndicator size="small" color={theme.primaryOrange} />
-        <Text 
+        <Text
           className="font-poppins-semibold text-sm"
           style={{ color: theme.text }}
         >
@@ -46,18 +38,19 @@ export function ConnectButton({
       <TouchableOpacity
         activeOpacity={0.7}
         className="flex-row items-center px-4 py-2.5 rounded-full gap-2 border"
-        style={{ 
+        style={{
           backgroundColor: theme.surfaceFill,
           borderColor: theme.stroke,
-          borderWidth: 0.25
+          borderWidth: 0.25,
         }}
-        onPress={onDisconnect}
+        onPress={connected ? disconnect : connect}
+        disabled={connecting}
       >
-        <View 
-          className="w-2 h-2 rounded-full" 
+        <View
+          className="w-2 h-2 rounded-full"
           style={{ backgroundColor: theme.semanticGreen }}
         />
-        <Text 
+        <Text
           className="font-poppins-bold text-sm"
           style={{ color: theme.text }}
         >
@@ -71,17 +64,21 @@ export function ConnectButton({
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      className="flex-row items-center px-6 py-3 rounded-full gap-2 shadow-sm"
-      style={{ backgroundColor: theme.primaryOrange }}
-      onPress={onConnect}
+      className="flex-row items-center px-4 py-1.5 rounded-[14px]  shadow-sm"
+      style={{
+        backgroundColor: theme.surfaceFill,
+        borderColor: theme.primaryOrange,
+        borderWidth: 1,
+      }}
+      onPress={connect}
     >
-      <Ionicons name="wallet-outline" size={20} color={theme.whiteConstant} />
-      <Text 
+      <Ionicons name="wallet-outline" size={20} color={theme.primaryOrange} />
+      {/* <Text
         className="font-poppins-bold text-base"
         style={{ color: theme.whiteConstant }}
       >
         Connect Wallet
-      </Text>
+      </Text> */}
     </TouchableOpacity>
   );
 }

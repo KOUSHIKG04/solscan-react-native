@@ -37,7 +37,7 @@ export default function ConfirmModal({
           style={{
             backgroundColor: theme.surfaceFill,
             borderColor: theme.stroke,
-            borderWidth: 0.6,
+            borderWidth: 0.7,
           }}
         >
           {danger && (
@@ -66,7 +66,7 @@ export default function ConfirmModal({
 
           <View className="flex-row gap-3">
             <TouchableOpacity
-              className="flex-1 px-6 py-4 rounded-xl items-center border"
+              className="flex-1 px-6 py-4 rounded-[20px] items-center border"
               style={{
                 borderColor: theme.stroke,
                 borderWidth: 0.6,
@@ -77,7 +77,7 @@ export default function ConfirmModal({
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="flex-1 px-6 py-4 rounded-xl items-center"
+              className="flex-1 px-6 py-4 rounded-[20px] items-center"
               style={{
                 backgroundColor: danger
                   ? theme.semanticRed

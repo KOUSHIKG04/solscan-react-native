@@ -9,11 +9,9 @@ export type Txn = {
   ok: boolean;
 };
 
-
 const getRpcUrl = (isDevnet: boolean) =>
   isDevnet
-    ? "https://api.devnet.solana.com"
-    : "https://api.mainnet-beta.solana.com";
+    ? "https://api.devnet.solana.com" : "https://api.mainnet-beta.solana.com";
 
 export const rpc = async (method: string, params: any[], isDevnet: boolean) => {
   const RPC = getRpcUrl(isDevnet);

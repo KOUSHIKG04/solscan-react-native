@@ -19,6 +19,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useWalletStore } from "../stores/wallet-store";
 import DevAndMain from "../components/DevAndMain";
 import { FavoriteButton } from "../components/FavoriteButton";
+import { useWallet } from "../hooks/useWallet";
+import ConnectButton from "../components/ConnectButton";
 
 export default function WalletScreen() {
   const [refreshing, setRefreshing] = useState(false);
@@ -35,6 +37,8 @@ export default function WalletScreen() {
   const [loadingTokensMore, setLoadingTokensMore] = useState(false);
 
   const { theme } = useTheme();
+  const wallet = useWallet();
+
   const isDevnet = useWalletStore((s) => s.isDevnet);
   // const toggleNetwork = useWalletStore((s) => s.toggleNetwork);
   const addToHistory = useWalletStore((s) => s.addToHistory);
@@ -117,15 +121,16 @@ export default function WalletScreen() {
               />
             }
           >
-            <View className="flex-row items-center relative">
+            <View className="flex-row items-center justify-between  pt-3">
               <Text
-                className="text-[32px] mt-3 font-poppins-bold"
+                className="text-[32px] font-poppins-bold"
                 style={{ color: theme.text, includeFontPadding: false }}
               >
                 SolScan
               </Text>
-              <View className="absolute right-0 flex-row items-center gap-2 mt-3 ">
+              <View className="flex-row items-center gap-3">
                 <DevAndMain />
+                <ConnectButton wallet={wallet} />
               </View>
             </View>
 
@@ -364,7 +369,7 @@ export default function WalletScreen() {
             )}
 
             {/* ... rest of the ScrollView content ... */}
-            {!error && txns.length > 0 && (
+            {/* {!error && txns.length > 0 && (
               <View className="mb-6">
                 <Text
                   className="text-lg mb-3 font-poppins-bold"
@@ -502,9 +507,9 @@ export default function WalletScreen() {
                   </View>
                 )}
               </View>
-            )}
+            )} */}
 
-            {!error && tokens.length > 0 && (
+            {/* {!error && tokens.length > 0 && (
               <View className="mb-6">
                 <Text
                   className="text-lg mb-3 font-poppins-bold"
@@ -629,7 +634,7 @@ export default function WalletScreen() {
                   </View>
                 )}
               </View>
-            )}
+            )} */}
 
             {(txns.length > 0 || tokens.length > 0) && <View className="h-5" />}
           </ScrollView>
