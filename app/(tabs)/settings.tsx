@@ -1,6 +1,6 @@
 import { View, Text, Switch, TouchableOpacity, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../../src/theme/useTheme";
 import { useWalletStore } from "../../src/stores/wallet-store";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,10 +18,9 @@ export default function SettingsScreen() {
   const [showClearModal, setShowClearModal] = useState(false);
 
   return (
-    <SafeAreaProvider>
+    <View className="flex-1" style={{ backgroundColor: theme.primaryFill }}>
       <SafeAreaView
         className="flex-1"
-        style={{ backgroundColor: theme.primaryFill }}
       >
         <ScrollView className="flex-1" contentContainerClassName="px-5 pb-10">
           <View className="flex-row items-center relative">
@@ -247,7 +246,6 @@ export default function SettingsScreen() {
             </TouchableOpacity>
           </View>
         </ScrollView>
-      </SafeAreaView>
       <ConfirmModal
         visible={showClearModal}
         title="Clear History"
@@ -260,6 +258,7 @@ export default function SettingsScreen() {
           setShowClearModal(false);
         }}
       />
-    </SafeAreaProvider>
+      </SafeAreaView>
+    </View>
   );
 }

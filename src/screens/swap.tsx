@@ -7,7 +7,7 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../theme/useTheme";
 import DevAndMain from "../components/DevAndMain";
@@ -36,7 +36,7 @@ export default function SwapScreen() {
   };
 
   return (
-    <SafeAreaProvider>
+    <View className="flex-1" style={{ backgroundColor: theme.primaryFill }}>
       <SafeAreaView
         className="flex-1"
         style={{ backgroundColor: theme.primaryFill }}
@@ -210,6 +210,6 @@ export default function SwapScreen() {
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
-    </SafeAreaProvider>
+    </View>
   );
 }

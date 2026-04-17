@@ -8,7 +8,7 @@ import {
   RefreshControl,
   Alert,
 } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useWalletStore } from "../../src/stores/wallet-store";
@@ -47,7 +47,7 @@ export default function WatchlistScreen() {
         } catch {
           return { address, balance: null, loading: false };
         }
-      })
+      }),
     );
     setItems(results);
   }, [favorites, isDevnet]);
@@ -55,7 +55,7 @@ export default function WatchlistScreen() {
   useEffect(() => {
     if (favorites.length > 0) {
       setItems(
-        favorites.map((a) => ({ address: a, balance: null, loading: true }))
+        favorites.map((a) => ({ address: a, balance: null, loading: true })),
       );
       fetchBalances();
     } else {
@@ -74,7 +74,7 @@ export default function WatchlistScreen() {
   };
 
   return (
-    <SafeAreaProvider>
+    <View className="flex-1" style={{ backgroundColor: theme.primaryFill }}>
       <SafeAreaView
         className="flex-1"
         style={{ backgroundColor: theme.primaryFill }}
@@ -231,6 +231,6 @@ export default function WatchlistScreen() {
           }
         }}
       />
-    </SafeAreaProvider>
+    </View>
   );
 }

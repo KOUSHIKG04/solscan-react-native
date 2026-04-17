@@ -1,6 +1,7 @@
 import "../global.css";
 import { Stack } from "expo-router";
 import { ActivityIndicator, View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import {
   useFonts,
   Poppins_300Light,
@@ -52,11 +53,16 @@ export default function RootLayout() {
   };
 
   return (
-    <ThemeProvider value={activeTheme}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="token/[mint]" options={{ headerShown: false }} />
-      </Stack>
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider value={activeTheme}>
+        <Stack screenOptions={{ 
+          headerShown: false,
+          contentStyle: { backgroundColor: theme.primaryFill } // Prevents flash on Stack transitions
+        }}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="token/[mint]" options={{ headerShown: false }} />
+        </Stack>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
