@@ -47,12 +47,28 @@ export default function SwapScreen() {
           contentContainerClassName="px-5 pb-10"
         >
           <View className="flex-row items-center relative">
-            <Text
-              className="text-[32px] mt-3 font-poppins-bold"
-              style={{ color: theme.text, includeFontPadding: false }}
-            >
-              SolSwap
-            </Text>
+            <View className="flex-row items-baseline gap-2">
+              <Text
+                className="text-[32px] mt-3 font-poppins-bold"
+                style={{ color: theme.text, includeFontPadding: false }}
+              >
+                SolSwap
+              </Text>
+              <View
+                className="px-2 py-0.5 rounded-md border"
+                style={{
+                  backgroundColor: theme.surfaceFill,
+                  borderColor: theme.primaryOrange,
+                }}
+              >
+                <Text
+                  className="text-[10px] font-poppins-bold"
+                  style={{ color: theme.primaryOrange }}
+                >
+                  COMING SOON
+                </Text>
+              </View>
+            </View>
             <View className="absolute right-0 flex-row items-center gap-2 mt-3 ">
               <DevAndMain />
             </View>
@@ -62,7 +78,7 @@ export default function SwapScreen() {
             className="text-base mb-3.5 font-poppins"
             style={{ color: theme.stroke }}
           >
-            Swap your tokens instantly...
+            Liquid swap will be functional soon...
           </Text>
 
           <View style={{ marginTop: 20 }}></View>
@@ -72,10 +88,12 @@ export default function SwapScreen() {
               backgroundColor: theme.surfaceFill,
               borderColor: theme.stroke,
               borderWidth: 0.6,
+              opacity: 0.8,
             }}
           >
             <View className="flex-row justify-between items-center">
               <TouchableOpacity
+                disabled
                 className="flex-row items-center rounded-[24px] pl-2 pr-3 py-2 gap-1.5 border"
                 style={{
                   backgroundColor: theme.containerFill,
@@ -100,6 +118,7 @@ export default function SwapScreen() {
                 <Ionicons name="chevron-down" size={18} color={theme.stroke} />
               </TouchableOpacity>
               <TextInput
+                editable={false}
                 className="text-[32px] font-poppins flex-1 ml-2.5 text-right"
                 style={{ color: theme.text }}
                 value={fromAmount}
@@ -130,11 +149,13 @@ export default function SwapScreen() {
             style={{ marginVertical: -22, zIndex: 10 }}
           >
             <TouchableOpacity
+              disabled
               className="w-11 h-11 rounded-xl items-center justify-center border"
               style={{
                 backgroundColor: theme.primaryFill,
                 borderColor: theme.stroke,
                 borderWidth: 0.6,
+                opacity: 0.8,
               }}
               onPress={swapTokens}
             >
@@ -148,10 +169,12 @@ export default function SwapScreen() {
               backgroundColor: theme.surfaceFill,
               borderColor: theme.stroke,
               borderWidth: 0.6,
+              opacity: 0.8,
             }}
           >
             <View className="flex-row justify-between items-center">
               <TouchableOpacity
+                disabled
                 className="flex-row items-center rounded-[24px] pl-2 pr-3 py-2 gap-1.5 border"
                 style={{
                   backgroundColor: theme.containerFill,
@@ -176,6 +199,7 @@ export default function SwapScreen() {
                 <Ionicons name="chevron-down" size={18} color={theme.stroke} />
               </TouchableOpacity>
               <TextInput
+                editable={false}
                 className="text-[32px] font-poppins flex-1 ml-2.5 text-right"
                 style={{ color: theme.text }}
                 value={toAmount}
@@ -202,11 +226,11 @@ export default function SwapScreen() {
           </View>
 
           <TouchableOpacity
-            className="py-[18px] rounded-2xl items-center mt-6"
+            className="py-[18px] rounded-2xl items-center mt-6 opacity-60"
             style={{ backgroundColor: theme.primaryOrange }}
-            onPress={handleSwap}
+            onPress={() => Alert.alert("Coming Soon", "The Swap feature will be functional after some time.")}
           >
-            <Text className="text-white text-lg font-poppins-bold">Swap</Text>
+            <Text className="text-white text-lg font-poppins-bold">Swap (Coming Soon)</Text>
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
