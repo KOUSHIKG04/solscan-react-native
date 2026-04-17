@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { Pressable, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useWalletStore } from "../stores/wallet-store";
 
@@ -16,8 +16,10 @@ export function FavoriteButton({ address }: Props) {
   const removeFavorite = useWalletStore((s) => s.removeFavorite);
 
   return (
-    <TouchableOpacity
-      onPress={() => (favorited ? removeFavorite(address) : addFavorite(address))}
+    <Pressable
+      onPress={() =>
+        favorited ? removeFavorite(address) : addFavorite(address)
+      }
       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
     >
       <Ionicons
@@ -25,6 +27,6 @@ export function FavoriteButton({ address }: Props) {
         size={24}
         color={favorited ? "#FF4545" : "#888"}
       />
-    </TouchableOpacity>
+    </Pressable>
   );
 }

@@ -37,7 +37,7 @@ export default function ConfirmModal({
           style={{
             backgroundColor: theme.surfaceFill,
             borderColor: theme.stroke,
-            borderWidth: 0.25,
+            borderWidth: 0.6,
           }}
         >
           {danger && (
@@ -69,7 +69,7 @@ export default function ConfirmModal({
               className="flex-1 px-6 py-4 rounded-xl items-center border"
               style={{
                 borderColor: theme.stroke,
-                borderWidth: 0.25,
+                borderWidth: 0.6,
               }}
               onPress={onCancel}
             >

@@ -1,6 +1,6 @@
 import "../global.css";
+import "../src/utils/polyfills";
 import { Stack } from "expo-router";
-import { ActivityIndicator, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import {
   useFonts,
@@ -16,6 +16,11 @@ import {
   DarkTheme,
 } from "@react-navigation/native";
 import { useTheme } from "../src/theme/useTheme";
+import * as SplashScreen from "expo-splash-screen";
+import * as SystemUI from "expo-system-ui";
+import { useEffect, useMemo } from "react";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -28,39 +33,61 @@ export default function RootLayout() {
 
   const { theme, scheme } = useTheme();
 
-  if (!fontsLoaded) {
-    return (
-      <View
-        className="flex-1 justify-center items-center"
-        style={{ backgroundColor: theme.primaryFill }}
-      >
-        <ActivityIndicator size="large" color={theme.primaryOrange} />
-      </View>
-    );
-  }
+  const activeTheme = useMemo(() => {
+    const navTheme = scheme === "dark" ? DarkTheme : DefaultTheme;
 
-  const navTheme = scheme === "dark" ? DarkTheme : DefaultTheme;
-  const activeTheme = {
-    ...navTheme,
-    colors: {
-      ...navTheme.colors,
-      background: theme.primaryFill,
-      card: theme.surfaceFill,
-      text: theme.text,
-      border: theme.stroke,
-      primary: theme.primaryOrange,
-    },
-  };
+    return {
+      ...navTheme,
+      colors: {
+        ...navTheme.colors,
+        background: theme.primaryFill,
+        card: theme.surfaceFill,
+        text: theme.text,
+        border: theme.stroke,
+        primary: theme.primaryOrange,
+      },
+    };
+  }, [scheme, theme]);
+
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync(theme.primaryFill);
+  }, [theme.primaryFill]);
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <SafeAreaProvider>
       <ThemeProvider value={activeTheme}>
-        <Stack screenOptions={{ 
-          headerShown: false,
-          contentStyle: { backgroundColor: theme.primaryFill } // Prevents flash on Stack transitions
-        }}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: theme.primaryFill },
+            animation: "default",
+          }}
+        >
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="token/[mint]" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="token/[mint]"
+            options={{
+              headerShown: false,
+              contentStyle: { backgroundColor: theme.primaryFill },
+            }}
+          />
+          <Stack.Screen
+            name="watchlist/watchlist"
+            options={{
+              headerShown: false,
+              contentStyle: { backgroundColor: theme.primaryFill },
+            }}
+          />
         </Stack>
       </ThemeProvider>
     </SafeAreaProvider>

@@ -99,9 +99,7 @@ export default function WalletScreen() {
 
   return (
     <View className="flex-1" style={{ backgroundColor: theme.primaryFill }}>
-      <SafeAreaView
-        className="flex-1"
-      >
+      <SafeAreaView className="flex-1">
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
@@ -144,7 +142,7 @@ export default function WalletScreen() {
               style={{
                 backgroundColor: theme.surfaceFill,
                 borderColor: theme.stroke,
-                borderWidth: 0.25,
+                borderWidth: 0.6,
               }}
             >
               <TextInput
@@ -246,7 +244,7 @@ export default function WalletScreen() {
                       style={{
                         backgroundColor: theme.containerFill,
                         borderColor: theme.stroke,
-                        borderWidth: 0.25,
+                        borderWidth: 0.6,
                       }}
                     >
                       <View className="flex-row items-center gap-3 mr-2 ">
@@ -279,7 +277,7 @@ export default function WalletScreen() {
                 style={{
                   backgroundColor: theme.surfaceFill,
                   // borderColor: theme.semanticRed,
-                  borderWidth: 0.25,
+                  borderWidth: 0.6,
                 }}
               >
                 <Text
@@ -297,11 +295,19 @@ export default function WalletScreen() {
                 style={{
                   backgroundColor: theme.surfaceFill,
                   borderColor: theme.stroke,
-                  borderWidth: 0.25,
+                  borderWidth: 0.6,
                   padding: 22,
                 }}
               >
-                <View style={{ position: "absolute", top: 14, right: 14 }}>
+                <View
+                  style={{
+                    position: "absolute",
+                    top: 14,
+                    right: 14,
+                    zIndex: 10,
+                    elevation: 10,
+                  }}
+                >
                   <FavoriteButton address={lastSearchedAddress} />
                 </View>
 
@@ -332,7 +338,7 @@ export default function WalletScreen() {
                         style={{
                           backgroundColor: theme.containerFill,
                           borderColor: theme.stroke,
-                          borderWidth: 0.25,
+                          borderWidth: 0.6,
                         }}
                       >
                         <Ionicons
@@ -373,7 +379,7 @@ export default function WalletScreen() {
                     style={{
                       backgroundColor: theme.containerFill,
                       borderColor: theme.stroke,
-                      borderWidth: 0.25,
+                      borderWidth: 0.6,
                     }}
                   >
                     <View style={{ flex: 1.5 }}>
@@ -453,7 +459,7 @@ export default function WalletScreen() {
                         onPress={() => setTxnsLimit(5)}
                         className="p-2.5 items-center rounded-[12px]"
                         style={{
-                          borderWidth: 0.25,
+                          borderWidth: 0.6,
                           borderColor: theme.stroke,
                         }}
                       >
@@ -475,7 +481,7 @@ export default function WalletScreen() {
                         }}
                         className="p-2.5 items-center rounded-[12px]"
                         style={{
-                          borderWidth: 0.25,
+                          borderWidth: 0.6,
                           borderColor: theme.stroke,
                         }}
                       >
@@ -513,7 +519,7 @@ export default function WalletScreen() {
                     style={{
                       backgroundColor: theme.containerFill,
                       borderColor: theme.stroke,
-                      borderWidth: 0.25,
+                      borderWidth: 0.6,
                     }}
                   >
                     <View style={{ flex: 1.5 }}>
@@ -602,7 +608,7 @@ export default function WalletScreen() {
                         }}
                         className="p-2.5 items-center rounded-[12px]"
                         style={{
-                          borderWidth: 0.25,
+                          borderWidth: 0.6,
                           borderColor: theme.stroke,
                         }}
                       >

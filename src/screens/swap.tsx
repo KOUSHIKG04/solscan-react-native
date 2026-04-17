@@ -71,7 +71,7 @@ export default function SwapScreen() {
             style={{
               backgroundColor: theme.surfaceFill,
               borderColor: theme.stroke,
-              borderWidth: 0.25,
+              borderWidth: 0.6,
             }}
           >
             <View className="flex-row justify-between items-center">
@@ -80,7 +80,7 @@ export default function SwapScreen() {
                 style={{
                   backgroundColor: theme.containerFill,
                   borderColor: theme.stroke,
-                  borderWidth: 0.25,
+                  borderWidth: 0.6,
                 }}
               >
                 <View
@@ -134,7 +134,7 @@ export default function SwapScreen() {
               style={{
                 backgroundColor: theme.primaryFill,
                 borderColor: theme.stroke,
-                borderWidth: 0.5,
+                borderWidth: 0.6,
               }}
               onPress={swapTokens}
             >
@@ -147,7 +147,7 @@ export default function SwapScreen() {
             style={{
               backgroundColor: theme.surfaceFill,
               borderColor: theme.stroke,
-              borderWidth: 0.25,
+              borderWidth: 0.6,
             }}
           >
             <View className="flex-row justify-between items-center">
@@ -156,7 +156,7 @@ export default function SwapScreen() {
                 style={{
                   backgroundColor: theme.containerFill,
                   borderColor: theme.stroke,
-                  borderWidth: 0.25,
+                  borderWidth: 0.6,
                 }}
               >
                 <View

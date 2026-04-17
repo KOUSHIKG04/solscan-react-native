@@ -6,7 +6,6 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
-  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -39,11 +38,7 @@ export default function WatchlistScreen() {
       favorites.map(async (address) => {
         try {
           const balance = await getBalance(address, isDevnet);
-          return {
-            address,
-            balance,
-            loading: false,
-          };
+          return { address, balance, loading: false };
         } catch {
           return { address, balance: null, loading: false };
         }
@@ -69,25 +64,29 @@ export default function WatchlistScreen() {
     setRefreshing(false);
   };
 
-  const handleRemove = (address: string) => {
-    setAddressToDelete(address);
-  };
-
   return (
-    <View className="flex-1" style={{ backgroundColor: theme.primaryFill }}>
-      <SafeAreaView
-        className="flex-1"
-        style={{ backgroundColor: theme.primaryFill }}
-      >
-        <View className="flex-1 px-5 pt-4">
-          <View className="flex-row items-center mb-6">
+    <View style={{ flex: 1, backgroundColor: theme.primaryFill }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: theme.primaryFill }}>
+        <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 16 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 24,
+            }}
+          >
             <TouchableOpacity
               onPress={() => router.back()}
-              className="mr-4 p-2 rounded-full"
-              style={{ backgroundColor: theme.surfaceFill }}
+              style={{
+                marginRight: 16,
+                padding: 8,
+                borderRadius: 999,
+                backgroundColor: theme.surfaceFill,
+              }}
             >
               <Ionicons name="arrow-back" size={24} color={theme.text} />
             </TouchableOpacity>
+
             <View>
               <Text
                 className="text-[32px] font-poppins-bold"
@@ -131,7 +130,11 @@ export default function WatchlistScreen() {
               data={items}
               keyExtractor={(item) => item.address}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: 40 }}
+              contentContainerStyle={{
+                paddingBottom: 40,
+                backgroundColor: theme.primaryFill,
+              }}
+              style={{ backgroundColor: theme.primaryFill }}
               refreshControl={
                 <RefreshControl
                   refreshing={refreshing}
@@ -143,70 +146,69 @@ export default function WatchlistScreen() {
               renderItem={({ item }) => (
                 <TouchableOpacity
                   activeOpacity={0.7}
-                  onLongPress={() => handleRemove(item.address)}
+                  onLongPress={() => setAddressToDelete(item.address)}
                   className="mb-4 rounded-[20px] border p-5 flex-row items-center justify-between"
                   style={{
                     backgroundColor: theme.surfaceFill,
                     borderColor: theme.stroke,
-                    borderWidth: 0.25,
+                    borderWidth: 0.7,
                   }}
                 >
-                  <View className="flex-row items-center flex-1 mr-4">
-                    <View
-                      className="w-10 h-10 rounded-xl items-center justify-center mr-3"
-                      style={{ backgroundColor: theme.containerFill }}
-                    >
-                      <Ionicons
-                        name="wallet-outline"
-                        size={20}
-                        color={theme.primaryOrange}
-                      />
-                    </View>
-                    <View className="flex-1">
+                  <View className="flex-row items-center justify-between w-full">
+                    {/* LEFT SIDE */}
+                    <View className="flex-row items-center gap-2 flex-1">
+                      <View
+                        className="w-8 h-8 rounded-xl items-center justify-center"
+                        style={{ backgroundColor: theme.containerFill }}
+                      >
+                        <Ionicons
+                          name="wallet-outline"
+                          size={16}
+                          color={theme.primaryOrange}
+                        />
+                      </View>
+
                       <Text
-                        className="font-poppins-bold text-sm"
+                        numberOfLines={1}
+                        className="font-poppins-bold text-sm flex-shrink"
                         style={{ color: theme.text }}
                       >
                         {shortenAddress(item.address, 6)}
                       </Text>
-                      <Text
-                        className="font-poppins text-[10px]"
-                        style={{ color: theme.stroke }}
-                      >
-                        {formatAddress(item.address)}
-                      </Text>
                     </View>
-                  </View>
 
-                  <View className="items-end">
-                    {item.loading ? (
-                      <ActivityIndicator
-                        size="small"
-                        color={theme.primaryOrange}
-                      />
-                    ) : item.balance !== null ? (
-                      <View className="items-end">
+                    {/* RIGHT SIDE */}
+                    <View className="items-end ml-2">
+                      {item.loading ? (
+                        <ActivityIndicator
+                          size="small"
+                          color={theme.primaryOrange}
+                        />
+                      ) : item.balance !== null ? (
+                        <View className="flex-row items-end gap-1.5">
+                          <Text
+                            className="font-poppins-bold text-base text-[12px]"
+                            style={{ color: theme.primaryOrange }}
+                          >
+                            {item.balance.toFixed(4)}
+                          </Text>
+
+                          <Text
+                            className="font-poppins-bold text-[12px]"
+                            style={{ color: theme.text }}
+                          >
+                            SOL
+                          </Text>
+                        </View>
+                      ) : (
                         <Text
-                          className="font-poppins-bold text-base"
-                          style={{ color: theme.primaryOrange }}
+                          className="font-poppins-medium text-xs"
+                          style={{ color: theme.semanticRed }}
                         >
-                          {item.balance.toFixed(4)}
+                          Error
                         </Text>
-                        <Text
-                          className="font-poppins-bold text-[10px]"
-                          style={{ color: theme.text }}
-                        >
-                          SOL
-                        </Text>
-                      </View>
-                    ) : (
-                      <Text
-                        className="font-poppins-medium text-xs"
-                        style={{ color: theme.semanticRed }}
-                      >
-                        Error
-                      </Text>
-                    )}
+                      )}
+                    </View>
                   </View>
                 </TouchableOpacity>
               )}

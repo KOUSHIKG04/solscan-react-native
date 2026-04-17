@@ -19,9 +19,7 @@ export default function SettingsScreen() {
 
   return (
     <View className="flex-1" style={{ backgroundColor: theme.primaryFill }}>
-      <SafeAreaView
-        className="flex-1"
-      >
+      <SafeAreaView className="flex-1">
         <ScrollView className="flex-1" contentContainerClassName="px-5 pb-10">
           <View className="flex-row items-center relative">
             <Text
@@ -52,7 +50,7 @@ export default function SettingsScreen() {
               style={{
                 backgroundColor: theme.surfaceFill,
                 borderColor: theme.stroke,
-                borderWidth: 0.25,
+                borderWidth: 0.6,
               }}
             >
               <View className="flex-row items-center justify-between">
@@ -88,10 +86,13 @@ export default function SettingsScreen() {
               style={{
                 backgroundColor: theme.surfaceFill,
                 borderColor: theme.stroke,
-                borderWidth: 0.25,
+                borderWidth: 0.6,
               }}
             >
-              <View className="flex-row items-center justify-between py-2 px-22">
+              <TouchableOpacity
+                onPress={() => setScheme(scheme === "dark" ? "light" : "dark")}
+                className="flex-row items-center justify-between py-2 px-22"
+              >
                 <Text
                   className="font-poppins-bold "
                   style={{ color: theme.text, includeFontPadding: false }}
@@ -103,7 +104,7 @@ export default function SettingsScreen() {
                   onPress={() =>
                     setScheme(scheme === "dark" ? "light" : "dark")
                   }
-                  style={{ marginRight: 13 }}
+                  style={{ marginRight: 13, zIndex: 10 }}
                 >
                   <Ionicons
                     name={scheme === "dark" ? "moon" : "sunny-outline"}
@@ -111,7 +112,7 @@ export default function SettingsScreen() {
                     color={theme.stroke}
                   />
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
 
             {/* <View
@@ -119,7 +120,7 @@ export default function SettingsScreen() {
               style={{
                 backgroundColor: theme.surfaceFill,
                 borderColor: theme.stroke,
-                borderWidth: 0.25,
+                borderWidth: 0.6,
               }}
             >
               <View className="flex-row items-center justify-between py-2 px-22">
@@ -158,7 +159,7 @@ export default function SettingsScreen() {
               style={{
                 backgroundColor: theme.surfaceFill,
                 borderColor: theme.stroke,
-                borderWidth: 0.25,
+                borderWidth: 0.6,
               }}
             >
               <View className="flex-row justify-between items-center py-2 px-2">
@@ -190,7 +191,7 @@ export default function SettingsScreen() {
               style={{
                 backgroundColor: theme.surfaceFill,
                 borderColor: theme.stroke,
-                borderWidth: 0.25,
+                borderWidth: 0.6,
               }}
             >
               <View className="flex-row justify-between py-2 px-2">
@@ -228,7 +229,7 @@ export default function SettingsScreen() {
               style={{
                 backgroundColor: theme.surfaceFill,
                 borderColor: theme.stroke,
-                borderWidth: 0.25,
+                borderWidth: 0.6,
               }}
               onPress={() => setShowClearModal(true)}
             >
@@ -246,18 +247,18 @@ export default function SettingsScreen() {
             </TouchableOpacity>
           </View>
         </ScrollView>
-      <ConfirmModal
-        visible={showClearModal}
-        title="Clear History"
-        description="This will remove all your search history. Favorites won't be affected."
-        confirmText="Clear"
-        danger
-        onCancel={() => setShowClearModal(false)}
-        onConfirm={() => {
-          clearHistory();
-          setShowClearModal(false);
-        }}
-      />
+        <ConfirmModal
+          visible={showClearModal}
+          title="Clear History"
+          description="This will remove all your search history. Favorites won't be affected."
+          confirmText="Clear"
+          danger
+          onCancel={() => setShowClearModal(false)}
+          onConfirm={() => {
+            clearHistory();
+            setShowClearModal(false);
+          }}
+        />
       </SafeAreaView>
     </View>
   );
